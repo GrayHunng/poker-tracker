@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PokerTracker</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #1a1a1a; color: white; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { background: #e67e22; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>手牌紀錄</h2>
+    <input type="text" id="opponent" placeholder="對手名稱 (例如: Maniac)">
+    <select id="street">
+        <option value="flop">Flop</option>
+        <option value="turn">Turn</option>
+        <option value="river">River</option>
+    </select>
+    <input type="number" id="pot" placeholder="底池大小">
+    <button onclick="saveData()">紀錄數據</button>
+
+    <script>
+        function saveData() {
+            // 這裡可以串接你的數據處理邏輯
+            alert("數據已儲存！");
+        }
+        // 註冊 Service Worker (PWA 核心)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
