@@ -1,5 +1,5 @@
 // 定義快取名稱
-const CACHE_NAME = 'poker-tracker-v2';
+const CACHE_NAME = 'poker-tracker-v3';
 // 定義需要離線儲存的檔案清單
 const ASSETS_TO_CACHE = [
   './',
