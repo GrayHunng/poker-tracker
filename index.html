@@ -8,19 +8,9 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; background: #121212; color: #e0e0e0; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-size: 14px; color: #888; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Poker Tracker Pro</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; background: #121212; color: #e0e0e0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; color: #888; }
         input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1e1e1e; color: white; font-size: 16px; box-sizing: border-box; }
         
-        /* 按鈕容器共通樣式 */
+        /* 按鈕佈局 */
         .btn-grid { display: grid; gap: 8px; margin-top: 8px; }
         .suit-grid { grid-template-columns: repeat(4, 1fr); }
         .rank-grid { grid-template-columns: repeat(5, 1fr); margin-top: 12px; }
@@ -30,19 +20,18 @@
 
         /* 花色顏色 */
         .suit-s { background: #444; }   /* 黑桃 */
-        .suit-h { background: #e74c3c; } /* 愛心 */
+        .suit-h { background: #e74c3c; } /* 紅心 */
         .suit-d { background: #3498db; } /* 方塊 */
         .suit-c { background: #27ae60; } /* 梅花 */
 
         /* 點數顏色 */
         .rank-btn { background: #333; border: 1px solid #444; }
-        .rank-high { color: #f1c40f; } /* 高牌 A, K, Q, J 使用金色 */
+        .rank-high { color: #f1c40f; } /* 高牌 A, K, Q, J, T */
 
         button#submit-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #2ecc71; color: white; font-size: 18px; font-weight: bold; margin-top: 25px; cursor: pointer; }
         button#submit-btn:active { background: #1f8e4c; }
         
-        /* 輔助功能：快速清空手牌 */
-        .clear-btn { background: #c0392b; font-size: 14px; padding: 5px 10px; border-radius: 4px; border: none; color: white; float: right; margin-bottom: 5px; }
+        .clear-btn { background: #c0392b; font-size: 14px; padding: 5px 10px; border-radius: 4px; border: none; color: white; float: right; }
     </style>
 </head>
 <body>
@@ -73,205 +62,11 @@
     </div>
 
     <div class="form-group">
-        <label>手牌 
-            <button class="clear-btn" onclick="document.getElementById('hand').value=''">清空</button>
-        </label>
+        <div style="overflow: hidden;">
+            <label style="float: left;">手牌</label>
+            <button class="clear-btn" onclick="clearHand()">清空</button>
+        </div>
         <input type="text" id="hand" placeholder="點擊下方按鈕輸入" readonly>
         
         <div class="btn-grid suit-grid">
-            <button class="input-btn suit-s" onclick="appendToHand('s')">♠</button>
-            <button class="input-btn suit-h" onclick="appendToHand('h')">♥</button>
-            <button class="input-btn suit-d" onclick="appendToHand('d')">♦</button>
-            <button class="input-btn suit-c" onclick="appendToHand('c')">♣</button>
-        </div>
-
-        <div class="btn-grid rank-grid">
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('A')">A</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('K')">K</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('Q')">Q</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('J')">J</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('T')">T</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('9')">9</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('8')">8</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('7')">7</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('6')">6</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('5')">5</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('4')">4</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('3')">3</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('2')">2</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('o')">o</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('s')">s</button>
-        </div>
-    </div>
-
-    <button id="submit-btn" onclick="saveData()">紀錄數據</button>
-
-    <script>
-        function appendToHand(char) {
-            const handInput = document.getElementById('hand');
-            handInput.value += char;
-        }
-
-        async function saveData() {
-            const data = {
-                position: document.getElementById('position').value,
-                pot_type: document.getElementById('pot_type').value,
-                hand: document.getElementById('hand').value,
-                timestamp: new Date().toLocaleString()
-            };
-
-            if (!data.hand) {
-                alert("請輸入手牌內容");
-                return;
-            }
-
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbyWKRG3iu5AUq3xve0NgnZ_tHSiXwXmmz-UcP8MhZuuZVPgzDgpIqHKqHOCfG-zxAGJ/exec'; 
-
-            try {
-                await fetch(apiUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                alert("紀錄成功！");
-                document.getElementById('hand').value = '';
-            } catch (error) {
-                alert("同步失敗，請檢查網路");
-            }
-        }
-    </script>
-</body>
-</html>; border: 1px solid #333; background: #1e1e1e; color: white; font-size: 16px; box-sizing: border-box; }
-        
-        /* 按鈕容器共通樣式 */
-        .btn-grid { display: grid; gap: 8px; margin-top: 8px; }
-        .suit-grid { grid-template-columns: repeat(4, 1fr); }
-        .rank-grid { grid-template-columns: repeat(5, 1fr); margin-top: 12px; }
-
-        .input-btn { border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; color: white; padding: 12px 0; }
-        .input-btn:active { opacity: 0.7; }
-
-        /* 花色顏色 */
-        .suit-s { background: #444; }   /* 黑桃 */
-        .suit-h { background: #e74c3c; } /* 愛心 */
-        .suit-d { background: #3498db; } /* 方塊 */
-        .suit-c { background: #27ae60; } /* 梅花 */
-
-        /* 點數顏色 */
-        .rank-btn { background: #333; border: 1px solid #444; }
-        .rank-high { color: #f1c40f; } /* 高牌 A, K, Q, J 使用金色 */
-
-        button#submit-btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #2ecc71; color: white; font-size: 18px; font-weight: bold; margin-top: 25px; cursor: pointer; }
-        button#submit-btn:active { background: #1f8e4c; }
-        
-        /* 輔助功能：快速清空手牌 */
-        .clear-btn { background: #c0392b; font-size: 14px; padding: 5px 10px; border-radius: 4px; border: none; color: white; float: right; margin-bottom: 5px; }
-    </style>
-</head>
-<body>
-    <h2 style="text-align: center; color: #2ecc71;">德州撲克手牌紀錄</h2>
-    
-    <div class="form-group">
-        <label>玩家編號</label>
-        <select id="player_name">
-            <option value="1">1 號位</option><option value="2">2 號位</option>
-            <option value="3">3 號位</option><option value="4">4 號位</option>
-            <option value="5">5 號位</option><option value="6">6 號位</option>
-            <option value="7">7 號位</option><option value="8">8 號位</option>
-            <option value="9">9 號位</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>位置</label>
-        <select id="position">
-            <option value="BTN">BTN</option><option value="SB">SB</option><option value="BB">BB</option>
-            <option value="UTG">UTG</option><option value="UTG+1">UTG+1</option>
-            <option value="UTG+2">UTG+2</option><option value="UTG+3">UTG+3</option>
-            <option value="MP">MP</option><option value="CO">CO</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>動作</label>
-        <select id="action">
-            <option value="RFI">RFI</option><option value="3-Bet">3-Bet</option>
-            <option value="4-Bet+">4-Bet+</option><option value="Call">Call</option>
-            <option value="Check-Raise">Check-Raise</option><option value="Bluff-Catch">Bluff-Catch</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>手牌 
-            <button class="clear-btn" onclick="document.getElementById('hand').value=''">清空</button>
-        </label>
-        <input type="text" id="hand" placeholder="點擊下方按鈕輸入">
-        
-        <div class="btn-grid suit-grid">
-            <button class="input-btn suit-s" onclick="appendToHand('s')">♠</button>
-            <button class="input-btn suit-h" onclick="appendToHand('h')">♥</button>
-            <button class="input-btn suit-d" onclick="appendToHand('d')">♦</button>
-            <button class="input-btn suit-c" onclick="appendToHand('c')">♣</button>
-        </div>
-
-        <div class="btn-grid rank-grid">
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('A')">A</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('K')">K</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('Q')">Q</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('J')">J</button>
-            <button class="input-btn rank-btn rank-high" onclick="appendToHand('T')">T</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('9')">9</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('8')">8</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('7')">7</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('6')">6</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('5')">5</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('4')">4</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('3')">3</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('2')">2</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('o')">o</button>
-            <button class="input-btn rank-btn" onclick="appendToHand('s')">s</button>
-        </div>
-    </div>
-
-    <button id="submit-btn" onclick="saveData()">紀錄數據</button>
-
-    <script>
-        function appendToHand(char) {
-            const handInput = document.getElementById('hand');
-            handInput.value += char;
-            handInput.focus();
-        }
-
-        async function saveData() {
-            const data = {
-                player_name: document.getElementById('player_name').value,
-                position: document.getElementById('position').value,
-                action: document.getElementById('action').value,
-                hand: document.getElementById('hand').value
-            };
-
-            if (!data.hand) {
-                alert("請輸入手牌內容");
-                return;
-            }
-
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbyWKRG3iu5AUq3xve0NgnZ_tHSiXwXmmz-UcP8MhZuuZVPgzDgpIqHKqHOCfG-zxAGJ/exec'; 
-
-            try {
-                // 使用 no-cors 時無法讀取 response body，但數據通常會成功送達
-                await fetch(apiUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                alert("紀錄成功！");
-                document.getElementById('hand').value = '';
-            } catch (error) {
-                alert("同步失敗，請檢查網路");
-            }
-        }
-    </script>
-</body>
-</html>
+            <button class="input-btn suit-s
